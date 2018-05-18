@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>"16-1 užduotis automobiliai"</title>
+    <style>
+        * {
+            border: 0;
+            padding: 0;
+        }
+
+        #konteineris {
+            margin: 5px;
+        }
+
+        #konteineris .container {
+            min-width: 800px;
+            margin: 0;
+            background-color: #b6b3b3
+        }
+
+        .col,
+        .col-1 {
+            border: 1px solid black;
+            padding: 0 5px;
+        }
+        .stilius{
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="konteineris">
+
+        <form>
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label class="aria-label" for="data">Data</label>
+                    <input id="input1" type="text" class="form-control mb-2" placeholder="Data">
+                </div>
+                <div class="col-auto">
+                    <label class="aria-label" for="data">Numeris</label>
+                    <input id="input2" type="text" class="form-control mb-2" placeholder="Numeris">
+                </div>
+                <div class="col-auto">
+                    <label class="aria-label" for="data">Atstumas(m)</label>
+                    <input id="input3" type="text" class="form-control mb-2" placeholder="Atstumas">
+                </div>
+                <div class="col-auto">
+                    <label class="aria-label" for="data">Laikas(s)</label>
+                    <input id="input4" type="text" class="form-control mb-2" placeholder="Laikas">
+                </div>
+            </div>
+        </form>
+
+        <button type="submit" class="btn btn-primary mb-2" onclick="ivesti()">Submit</button>
+
+        <div class="container" id="rez">
+            <div class="row" style="text-align: center; padding: auto 3px;">
+                <div class="col">
+                    Eil. NR.
+                </div>
+                <div class="col">
+                    DATA
+                </div>
+                <div class="col">
+                    AUTOMOBILIO NUMERIS
+                </div>
+                <div class="col">
+                    KELIAS METRAIS
+                </div>
+                <div class="col">
+                    KELIAS SEKUNDĖMIS
+                </div>
+                <div class="col">
+                    GREITIS KM/H
+                </div>
+                <div class="col">
+                    Galimi veiksmai
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var auto = [];
+        var lentelesHearder = lentelesturinys()
+        function ivesti() {
+            auto.push([
+                document.getElementById("input1").value,
+                document.getElementById("input2").value,
+                document.getElementById("input3").value,
+                document.getElementById("input4").value
+            ])
+            let ind = auto.length - 1;
+            if (ArPilnas(auto)) {
+                let tekstas = "";
+                tekstas += '<div class="row">';
+                tekstas += stulpelis(ind + 1, ind, false);
+                tekstas += stulpelis(auto[ind][0], ind, true);
+                tekstas += stulpelis(auto[ind][1], ind, true);
+                tekstas += stulpelis(auto[ind][2], ind, true);
+                tekstas += stulpelis(auto[ind][3], ind, true);
+                tekstas += stulpelis(Math.round(auto[ind][2] / auto[ind][3] / 3.6), ind, false);
+                tekstas += mygtukai(ind);
+                tekstas += '</div>';
+                document.getElementById("rez").innerHTML += tekstas;
+                document.getElementById("input1").value = "";
+                document.getElementById("input2").value = "";
+                document.getElementById("input3").value = "";
+                document.getElementById("input4").value = "";
+
+            }
+        }
+
+        function mygtukai(index) {
+            var td = '<div class="col">'
+                + '<button id="redaguoti' + index + '" onclick="redaguoti(' + index + ')" type="button" style="display:inline" class="btn-outline-primary"><i class="material-icons">&#xE254;</i></button>'
+                + '<button id="issaugoti' + index + '" onclick="issaugoti(' + index + ')" style="display:none" type="button" class="btn-outline-success"><i class="material-icons">done</i></button>'
+                + '<button id="atsaukti' + index + '" onclick="atsaukti(' + index + ')" style="display:none" type="button" class="btn-outline-warning"><i class="material-icons">reply</i></button>'
+                + '<button onclick="trinti(' + index + ')" type="button" class="btn-outline-danger"><i class="material-icons">clear</i></button>'
+                + '</div>';
+            return td;
+        }
+
+        function trinti(index) {
+            auto.splice(index, 1);
+            lentele();
+        }
+
+
+        function ArPilnas(auto) {
+            for (i = 0; i < auto[auto.length - 1].length; i++) {
+                if (auto[auto.length - 1][i] == false) return false;
+            }
+            return true;
+        }
+
+        function lentele() {
+       //     if (auto.length > 0) {
+                let tekstas = lentelesHearder;
+                for (let i = 0; i < auto.length; i++) {
+                    tekstas += '<div class="row">';
+                    tekstas += stulpelis(i + 1, i, false);
+                    tekstas += stulpelis(auto[i][0], i, true);
+                    tekstas += stulpelis(auto[i][1], i, true);
+                    tekstas += stulpelis(auto[i][2], i, true);
+                    tekstas += stulpelis(auto[i][3], i, true);
+                    tekstas += stulpelis(Math.round(auto[i][2] / auto[i][3] / 3.6), i, false);
+                    tekstas += mygtukai(i);
+                    tekstas += '</div>';
+                }
+                document.getElementById("rez").innerHTML = tekstas;
+          //  }
+        }
+        function stulpelis(reiksme, index, arMasyvElement) {
+            var td = (arMasyvElement ? ('<div class="col"><input class="en' + index + ' stilius" type="text"  style="display:none" value="' + reiksme + '"><spam class=" text' + index + '">' + reiksme + '</spam>') : ('<div class="col">' + reiksme) ) +'</div>';
+            return td;
+        }
+        function lentelesturinys() {
+            return document.getElementById("rez").innerHTML;
+        }
+        function redaguoti(classname) {
+            document.getElementById("redaguoti" + classname).style.display = "none";
+            document.getElementById("atsaukti" + classname).style.display = "inline";
+            document.getElementById("issaugoti" + classname).style.display = "inline";
+            let x = document.getElementsByClassName("en"+classname);
+            let y = document.getElementsByClassName("text"+classname);
+            let i;
+            for (i = 0; i < x.length; i++) {
+                y[i].style.display = "none";
+                x[i].style.display = "inline";
+            }
+        }
+        function atsaukti(classname) {
+            document.getElementById("atsaukti" + classname).style.display = "none";
+            document.getElementById("issaugoti" + classname).style.display = "none";
+            document.getElementById("redaguoti" + classname).style.display = "inline";
+            let x = document.getElementsByClassName("en"+classname);
+            let y = document.getElementsByClassName("text"+classname);
+            let i;
+            for (i = 0; i < x.length; i++) {
+                y[i].style.display = "inline";
+                x[i].style.display = "none";
+            }
+        }        
+        function issaugoti(classname) {
+            document.getElementById("atsaukti" + classname).style.display = "none";
+            document.getElementById("issaugoti" + classname).style.display = "none";
+            document.getElementById("redaguoti" + classname).style.display = "inline";
+            let inputMas = document.getElementsByClassName("en"+classname);
+            let spamMas = document.getElementsByClassName("text"+classname);
+            let i;
+            for (i = 0; i < spamMas.length; i++) {
+                spamMas[i].value = inputMas[i].value;
+                spamMas[i].style.display = "inline";
+                inputMas[i].style.display = "none";
+                auto[classname][i]= inputMas[i].value;
+            }
+            lentele();
+        }
+    </script>
+</body>
+
+</html>
